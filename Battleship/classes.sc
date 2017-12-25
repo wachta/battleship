@@ -36,13 +36,14 @@ def getElem(list: List[Any],index:Int): Any={
   }
 }
 
-
 def getElemListPos(list: List[List[Position]],index:Int): List[Position] ={ //Es muss dasverwendet werden sonst knallts
   index match{
     case 0 => list.head
     case _=> getElemListPos(list.tail,index-1)
   }
 }
+
+
 //HELPING END
 
 //CLASSES
@@ -67,6 +68,14 @@ case class battlefield (var size :Int) {
         }
         construct(size-1,sizeHolder,holder ::: list)
     }
+  }
+}
+
+case class fleet (ships : List[List[Position]]) {
+  var shipsPos = ships
+  //überschreibt unsere schiffsPositionen und nimmt die Position heraus kann damit als HitPointListe verwendet werden
+  def removeHit (Pos : Position) : Unit = { //Funktion entfernt Treffer aus gegebener List Liste von Positionen
+    shipsPos = shipsPos.map(x => x.filter(_ != Pos))
   }
 }
 
@@ -104,16 +113,17 @@ case class player (id : Int, name : String) {
     getElem(this.shots, turn)
   }
 
-  def shoot (shotPos: Position, list: List[List[Position]]) : Unit = {
+  def shoot (shotPos: Position, flotte : fleet) : Unit = {
     require(shotPos != Position(0,0),"Diese Koordinate ist reserviert wird für Fehlerbugging verwendet gibt es im Spiel nicht")
     if(existIn(shotPos,this.shots)) println("Auf Koordinate " + shotPos + " wurde bereits gefeuert.") //funktion terminiert
     else { //Treffer existiert noch nicht wir durchsuchen die Liste
       var i = 0
-      while(i < list.length) { //auch wenn getroffen sucht weiter
-        var PosList = getElemListPos(list,i)
+      while(i < flotte.ships.length) { //auch wenn getroffen sucht weiter
+        var PosList = getElemListPos(flotte.ships,i)
         if(findElemPos(shotPos,PosList) != Position(0,0)){
-          println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen.")
-          //Die Koordinate muss RAUSGENOMMEN WERDENwie ? KEINE AHNUNG
+          println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen." + PosList.length)
+         // if(PosList.length == 1) println("Ein Schiff wurde zerstört !") Ansatz is gut aber funktionieren tuts net länge der Liste verändert sich nicht!
+          flotte.removeHit(shotPos) //Wenn Treffer wird Koordinate entfernt
         }
         i += 1
       }
@@ -123,23 +133,6 @@ case class player (id : Int, name : String) {
   }
 }
 //CLASSES END
-
-
-//BELOW TESTING AND SAMPLE RUNS (USELESS SHIT)
-//DELETE AFTER DONE
-val Player1 = player(2,"Peter")
-val Bismark = ship(5,Position(3,3),"vertical")
-val Seenot = ship (3,Position(1,2),"horizontal")
-val uboot = ship(1,Position(5,5),"vertical")
-
-var Flotte = List(Bismark.BattlePos,Seenot.BattlePos,uboot.BattlePos)
-
-
-
-
-Player1.shoot(Position(3,3),Flotte)
-Player1.shoot(Position(3,3),Flotte)
-
 
 //OLD CODE
 /*def shoot(shotPos: Position, list: List[List[Position]]): Unit = {
@@ -187,3 +180,14 @@ Player1.shoot(Position(3,3),Flotte)
     }
   }
   */
+
+//TESTING AREA//
+//BELOW TESTING AND SAMPLE RUNS (USELESS SHIT)
+//DELETE AFTER DONE
+val Peter = player(12,"pjups")
+val bismark = ship(2,Position(1,1),"vertical")
+val uboot = ship(3,Position(5,5),"horizontal")
+val Floote = fleet(List(uboot.BattlePos,bismark.BattlePos))
+Peter.shoot(Position(1,1),Floote)
+Peter.shoot(Position(1,2),Floote)
+Floote.shipsPos
