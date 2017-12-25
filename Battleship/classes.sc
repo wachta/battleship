@@ -191,3 +191,4 @@ val Floote = fleet(List(uboot.BattlePos,bismark.BattlePos))
 Peter.shoot(Position(1,1),Floote)
 Peter.shoot(Position(1,2),Floote)
 Floote.shipsPos
+//Schiffzerstörung werd noch net getriggert sonst läuft jz alles
