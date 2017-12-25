@@ -9,7 +9,7 @@ def existIn (elem1 : Any, elem2 : List[Any]): Boolean = {
   }
 }
 
-def findElemPos (elem1 : Position, elem2 : List[Position]): Position = {
+def findElemPos (elem1 : Position, elem2 : List[Position]): Position = { //Wenn mit ergebnis in diesem Fall Position weitergearbeitet werden wird MUSS DER Return Type Pos sein deswegen ähnliche funks.
   elem2.length match{
     case 0 => Position(0,0)
     case otherwhise => {
@@ -111,7 +111,10 @@ case class player (id : Int, name : String) {
       var i = 0
       while(i < list.length) { //auch wenn getroffen sucht weiter
         var PosList = getElemListPos(list,i)
-        if(findElemPos(shotPos,PosList) != Position(0,0)) println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen.")
+        if(findElemPos(shotPos,PosList) != Position(0,0)){
+          println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen.")
+          //Die Koordinate muss RAUSGENOMMEN WERDENwie ? KEINE AHNUNG
+        }
         i += 1
       }
       takenshots += 1 //egal ob getroffen oder nicht takenshots wird um 1 erhöht
