@@ -9,6 +9,16 @@ def existIn (elem1 : Any, elem2 : List[Any]): Boolean = {
   }
 }
 
+def findElemPos (elem1 : Position, elem2 : List[Position]): Position = {
+  elem2.length match{
+    case 0 => Position(0,0)
+    case otherwhise => {
+      if (elem1 == elem2.head) elem2.head
+      else findElemPos(elem1,elem2.tail)
+    }
+  }
+}
+
 def hasSimiliarElements(list1 : List[Any], list2 : List[Any]): Boolean = {
   list1.length match {
     case 0 => 5==6
@@ -23,6 +33,14 @@ def getElem(list: List[Any],index:Int): Any={
   index match{
     case 0 => list.head
     case _=> getElem(list.tail,index-1)
+  }
+}
+
+
+def getElemListPos(list: List[List[Position]],index:Int): List[Position] ={ //Es muss dasverwendet werden sonst knallts
+  index match{
+    case 0 => list.head
+    case _=> getElemListPos(list.tail,index-1)
   }
 }
 //HELPING END
@@ -77,16 +95,73 @@ case class ship (length : Int , startPos : Position , direction : String) {
   }
 }
 
-case class player (id : Int, name : String){
+case class player (id : Int, name : String) {
 
-  var shots = List(Position(0,0))
+  var shots = List(Position(0, 0))
   var takenshots = 0 //besser als length von shots zu nehmen
 
-  def getShot (turn : Int) ={ //function fürn slider
-    getElem(this.shots,turn)
+  def getShot(turn: Int) = { //function fürn slider
+    getElem(this.shots, turn)
   }
 
-  def shoot (shotPos : Position,list : List[Position]): Unit = { //Angegebene Position Liste  is nocht net passend ...
+  def shoot (shotPos: Position, list: List[List[Position]]) : Unit = {
+    require(shotPos != Position(0,0),"Diese Koordinate ist reserviert wird für Fehlerbugging verwendet gibt es im Spiel nicht")
+    if(existIn(shotPos,this.shots)) println("Auf Koordinate " + shotPos + " wurde bereits gefeuert.") //funktion terminiert
+    else { //Treffer existiert noch nicht wir durchsuchen die Liste
+      var i = 0
+      while(i < list.length) { //auch wenn getroffen sucht weiter
+        var PosList = getElemListPos(list,i)
+        if(findElemPos(shotPos,PosList) != Position(0,0)) println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen.")
+        i += 1
+      }
+      takenshots += 1 //egal ob getroffen oder nicht takenshots wird um 1 erhöht
+      shots = shots ::: List(shotPos) //der Schuss wird der Liste angefügt
+    }
+  }
+}
+//CLASSES END
+
+
+//BELOW TESTING AND SAMPLE RUNS (USELESS SHIT)
+//DELETE AFTER DONE
+val Player1 = player(2,"Peter")
+val Bismark = ship(5,Position(3,3),"vertical")
+val Seenot = ship (3,Position(1,2),"horizontal")
+val uboot = ship(1,Position(5,5),"vertical")
+
+var Flotte = List(Bismark.BattlePos,Seenot.BattlePos,uboot.BattlePos)
+
+
+
+
+Player1.shoot(Position(3,3),Flotte)
+Player1.shoot(Position(3,3),Flotte)
+
+
+//OLD CODE
+/*def shoot(shotPos: Position, list: List[List[Position]]): Unit = {
+    require(shotPos != Position(0, 0))
+    var i = 0
+    if (existIn(shotPos, shots)) println("Dorthin wurde bereits geschossen")
+    else {
+      while (i < list.length) { //Geht durch alle Listen von jedem schiff durch und schaut obs trifft
+        shootsingle(shotPos, getElemListPos(list, i))
+        i = i + 1
+      }
+      takenshots += 1
+      shots = shots ::: List(shotPos)
+    }
+  }
+
+  def shootsingle(shotPos: Position, list: List[Position]): Position = { //Angegebene Position Liste  is nocht net passend ...#
+    if(list.length == 0) Position(0,0)
+    else {
+      if (list.length != 0 && list.head == shotPos) shotPos
+      else (shootsingle(shotPos, list.tail))
+    }
+  }
+
+    def shoot (shotPos : Position,list : List[Position]): Unit = { //Angegebene Position Liste  is nocht net passend ...
     require(shotPos != Position(0,0))
     list.length match {
       case 0 => {
@@ -108,16 +183,4 @@ case class player (id : Int, name : String){
         }
     }
   }
-}
-//CLASSES END
-
-
-
-//BELOW TESTING AND SAMPLE RUNS (USELESS SHIT)
-//DELETE AFTER DONE
-val Bismark = ship(5,Position(3,3),"vertical")
-val Seenot = ship (3,Position(1,2),"horizontal")
-val uboot = ship(1,Position(5,5),"vertical")
-
-var Flotte = List(Bismark.BattlePos,Seenot.BattlePos,uboot.BattlePos)
-getElem(Flotte,1)
+  */
