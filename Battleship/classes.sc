@@ -119,10 +119,10 @@ case class player (id : Int, name : String) {
     else { //Treffer existiert noch nicht wir durchsuchen die Liste
       var i = 0
       while(i < flotte.ships.length) { //auch wenn getroffen sucht weiter
-        var PosList = getElemListPos(flotte.ships,i)
+        var PosList = getElemListPos(flotte.shipsPos,i)
         if(findElemPos(shotPos,PosList) != Position(0,0)){
           println("Das Schiff " + i + " wurde an der Koordinate " + shotPos + " getroffen." + PosList.length)
-         // if(PosList.length == 1) println("Ein Schiff wurde zerstört !") Ansatz is gut aber funktionieren tuts net länge der Liste verändert sich nicht!
+         if(PosList.length == 1) println("Ein Schiff wurde zerstört !") //Wenn zum Zeitpunkt des Treffers die länge der betroffenen Liste eins ist ist danach das Schiff zerstört ;)
           flotte.removeHit(shotPos) //Wenn Treffer wird Koordinate entfernt
         }
         i += 1
@@ -180,15 +180,3 @@ case class player (id : Int, name : String) {
     }
   }
   */
-
-//TESTING AREA//
-//BELOW TESTING AND SAMPLE RUNS (USELESS SHIT)
-//DELETE AFTER DONE
-val Peter = player(12,"pjups")
-val bismark = ship(2,Position(1,1),"vertical")
-val uboot = ship(3,Position(5,5),"horizontal")
-val Floote = fleet(List(uboot.BattlePos,bismark.BattlePos))
-Peter.shoot(Position(1,1),Floote)
-Peter.shoot(Position(1,2),Floote)
-Floote.shipsPos
-//Schiffzerstörung werd noch net getriggert sonst läuft jz alles
