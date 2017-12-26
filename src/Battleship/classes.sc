@@ -1,3 +1,4 @@
+
 //HELPING FUNCTIONS
 def existIn (elem1 : Any, elem2 : List[Any]): Boolean = {
   elem2.length match{
@@ -25,7 +26,7 @@ def hasSimiliarElements(list1 : List[Any], list2 : List[Any]): Boolean = {
     case otherwhise => {
       if(existIn(list1.head,list2)) "gg" == "gg"
       else(hasSimiliarElements(list1.tail,list2))
-      }
+    }
   }
 }
 
@@ -42,8 +43,6 @@ def getElemListPos(list: List[List[Position]],index:Int): List[Position] ={ //Es
     case _=> getElemListPos(list.tail,index-1)
   }
 }
-
-
 //HELPING END
 
 //CLASSES
@@ -133,50 +132,3 @@ case class player (id : Int, name : String) {
   }
 }
 //CLASSES END
-
-//OLD CODE
-/*def shoot(shotPos: Position, list: List[List[Position]]): Unit = {
-    require(shotPos != Position(0, 0))
-    var i = 0
-    if (existIn(shotPos, shots)) println("Dorthin wurde bereits geschossen")
-    else {
-      while (i < list.length) { //Geht durch alle Listen von jedem schiff durch und schaut obs trifft
-        shootsingle(shotPos, getElemListPos(list, i))
-        i = i + 1
-      }
-      takenshots += 1
-      shots = shots ::: List(shotPos)
-    }
-  }
-
-  def shootsingle(shotPos: Position, list: List[Position]): Position = { //Angegebene Position Liste  is nocht net passend ...#
-    if(list.length == 0) Position(0,0)
-    else {
-      if (list.length != 0 && list.head == shotPos) shotPos
-      else (shootsingle(shotPos, list.tail))
-    }
-  }
-
-    def shoot (shotPos : Position,list : List[Position]): Unit = { //Angegebene Position Liste  is nocht net passend ...
-    require(shotPos != Position(0,0))
-    list.length match {
-      case 0 => {
-        println("daneben du pfeifn")
-        shots = shots ::: List(shotPos) // FÜRN COUNTER LISTE SHOTS hat gleich viel einträge wie takenshots -> slider
-        takenshots += 1
-      }
-      case otherwise =>
-        if(existIn(shotPos,shots)) {
-          println("Da hast schn hinballert du irrer")
-        }
-        else{
-          if(shotPos == list.head) {
-            println("Treffer bei " + shotPos)
-            takenshots += 1
-            shots = shots ::: List(shotPos)
-          }
-          else (shoot(shotPos,list.tail))
-        }
-    }
-  }
-  */
